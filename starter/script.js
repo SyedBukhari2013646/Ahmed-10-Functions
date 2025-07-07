@@ -92,3 +92,5 @@ const high5 = function () {
 document.body.addEventListener('click', high5);
 
 ['ahmed', 'harris', 'ibrahim'].forEach(high5);
+
+//Hi
