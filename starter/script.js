@@ -62,35 +62,207 @@
 //////Higher Order Functionn//////
 //////////////////////////////////
 
-const oneWord = function (str) {
-  return str.replace(/ /g, '').toLowerCase();
-  console.log(str);
+// const oneWord = function (str) {
+//   return str.replace(/ /g, '').toLowerCase();
+//   console.log(str);
+// };
+
+// const firstUpper = function (str) {
+//   const [first, ...others] = str.split(' ');
+//   return [first.toUpperCase(), ...others].join(' ');
+// };
+
+// // High order function
+
+// const transformer = function (str, fn) {
+//   console.log(`Orignal String: ${str}`);
+//   console.log(`Transformed String: ${fn(str)}`);
+//   console.log(`Transformed by: ${fn.name}`);
+// };
+
+// transformer('javascript is the best!', firstUpper);
+// transformer('javascript is the first best webdevelopment language!', oneWord);
+
+// //Callback function
+// //JS takes callback all the times
+// const high5 = function () {
+//   console.log('👋');
+// };
+
+// document.body.addEventListener('click', high5);
+
+// ['ahmed', 'harris', 'ibrahim'].forEach(high5);
+
+//Function returning functions
+
+// const greet = function (greeting) {
+//   return function (name) {
+//     console.log(`${greeting} ${name}`);
+//   };
+// };
+
+// const greet = greeting => name => console.log(`${greeting} ${name}`);
+
+// const greeterHey = greet('Hey');
+// greeterHey('Ahmed');
+// greeterHey('Harris');
+
+// greet('asalamalaikum')('Ya sheikh');
+
+//////////////////////////////////
+/////Closer Look at Function//////
+//////////////////////////////////
+
+const luftansa = {
+  airline: 'luftansa',
+  iataCode: 'LH',
+  bookings: [],
+
+  book(flightNum, name) {
+    console.log(
+      `${name} booked a seat on ${this.airline} flight, ${this.iataCode}${flightNum}`
+    );
+    this.bookings.push({ flight: `${this.iataCode}${flightNum}`, name });
+  },
 };
 
-const firstUpper = function (str) {
-  const [first, ...others] = str.split(' ');
-  return [first.toUpperCase(), ...others].join(' ');
+luftansa.book(534, 'Syed Muhammad Ahmed Bukhari');
+luftansa.book(424, 'hafsa irfan');
+console.log(luftansa);
+
+// Another aitline launched
+const euowrings = {
+  airline: 'Euowrings',
+  iataCode: 'EW',
+  bookings: [],
 };
 
-// High order function
+const book = luftansa.book;
+// book(432, 'Rana Ibrahim');
 
-const transformer = function (str, fn) {
-  console.log(`Orignal String: ${str}`);
-  console.log(`Transformed String: ${fn(str)}`);
-  console.log(`Transformed by: ${fn.name}`);
+//This method in call() functionality
+
+book.call(euowrings, 45, 'Abdullah taj');
+console.log(euowrings);
+
+// Another aitline launched
+const swiss = {
+  airline: 'swiss',
+  iataCode: 'SS',
+  bookings: [],
 };
 
-transformer('javascript is the best!', firstUpper);
-transformer('javascript is the first best webdevelopment language!', oneWord);
+book.call(swiss, 77, 'Kubra bibi');
 
-//Callback function
-//JS takes callback all the times
-const high5 = function () {
-  console.log('👋');
+// Apply() method   =====> old way
+const flightData = [25, 'Ashtar Hussain'];
+book.apply(swiss, flightData);
+
+// New method
+book.call(swiss, ...flightData);
+
+////////BIND method/////////
+
+const bookEW = book.bind(euowrings);
+const bookSW = book.bind(swiss);
+const bookLA = book.bind(luftansa, 34);
+
+bookEW(43, 'Shanza batool');
+bookSW(99, 'iram fatima');
+bookLA(69, 'izhar shah');
+
+bookLA('Ahmed bukhari');
+bookLA('imran hashmi');
+
+//Bind() with event listner
+luftansa.planes = 300;
+luftansa.buyPlanes = function () {
+  console.log(this);
+  this.planes++;
+  console.log(this.planes);
 };
 
-document.body.addEventListener('click', high5);
+document
+  .querySelector('.buy')
+  .addEventListener('click', luftansa.buyPlanes.bind(luftansa));
 
-['ahmed', 'harris', 'ibrahim'].forEach(high5);
+//Partial application
+const taxRate = (rate, value) => value + value * rate;
+console.log(taxRate(0.1, 200));
 
-//Hi
+const pakTax = taxRate.bind(null, 0.23);
+
+console.log(pakTax(100));
+console.log(pakTax(23));
+
+//Challenge video
+
+const tax = function (rate) {
+  return function (value) {
+    return value + value * rate;
+  };
+};
+
+const pakTax2 = tax(0.23);
+console.log(pakTax2(100));
+console.log(pakTax2(23));
+
+///////////////////////////////////////
+// Coding Challenge #1
+
+/* 
+Let's build a simple poll app!
+
+A poll has a question, an array of options from which people can choose, and an array with the number of replies for each option. This data is stored in the starter object below.
+
+Here are your tasks:
+
+1. Create a method called 'registerNewAnswer' on the 'poll' object. The method does 2 things:
+  1.1. Display a prompt window for the user to input the number of the selected option. The prompt should look like this:
+        What is your favourite programming language?
+        0: JavaScript
+        1: Python
+        2: Rust
+        3: C++
+        (Write option number)
+  
+  1.2. Based on the input number, update the answers array. For example, if the option is 3, increase the value AT POSITION 3 of the array by 1. Make sure to check if the input is a number and if the number makes sense (e.g answer 52 wouldn't make sense, right?)
+2. Call this method whenever the user clicks the "Answer poll" button.
+3. Create a method 'displayResults' which displays the poll results. The method takes a string as an input (called 'type'), which can be either 'string' or 'array'. If type is 'array', simply display the results array as it is, using console.log(). This should be the default option. If type is 'string', display a string like "Poll results are 13, 2, 4, 1". 
+4. Run the 'displayResults' method at the end of each 'registerNewAnswer' method call.
+
+HINT: Use many of the tools you learned about in this and the last section 😉
+
+BONUS: Use the 'displayResults' method to display the 2 arrays in the test data. Use both the 'array' and the 'string' option. Do NOT put the arrays in the poll object! So what shoud the this keyword look like in this situation?
+
+BONUS TEST DATA 1: [5, 2, 3]
+BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
+
+GOOD LUCK 😀
+*/
+
+const poll = {
+  question: 'What is your favourite programming language?',
+  options: ['0: JavaScript', '1: Python', '2: Rust', '3: C++'],
+  // This generates [0, 0, 0, 0]. More in the next section 😃
+  answers: new Array(4).fill(0),
+
+  //Task 1
+  registerNewAnswer: function () {
+    const answer = prompt(`${this.question}\n`);
+    // const message = `What is your favourite programming language?
+    //   0: JavaScript
+    //   1: Python
+    //   2: Rust
+    //   3: C++
+    //   (Write option number)`;
+
+    // const answer = prompt(message);
+    // console.log(answer);
+  },
+};
+
+poll.registerNewAnswer();
+
+const pollAnswers = poll.answers;
+console.log(pollAnswers);
