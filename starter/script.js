@@ -373,3 +373,57 @@ GOOD LUCK 😀
 //////////////////////////////////
 /////////////Clousers/////////////
 //////////////////////////////////
+
+const secureBooking = function () {
+  let passengerCount = 0;
+
+  return function () {
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+  };
+};
+
+const booking = secureBooking();
+booking();
+booking();
+booking();
+
+console.dir(booking);
+
+//EXAMPLE OF CLOSURE 1
+let f;
+
+const g = function () {
+  const a = 23;
+  f = function () {
+    console.log(a * 2);
+  };
+};
+
+const h = function () {
+  const b = 99;
+  f = function () {
+    console.log(b * 2);
+  };
+};
+g();
+f();
+console.dir(f);
+
+h();
+f();
+console.dir(f);
+
+//EXAMPLE OF CLOSURE 2
+
+const boardPlane = function (n, wait) {
+  const perGroup = n / 3;
+  setTimeout(function () {
+    console.log(`We are boarding all ${n} passengers.`);
+    console.log(`There are three groups, Each with ${perGroup} passengers`);
+  }, wait * 1000);
+
+  console.log(`Will be start boarding in ${wait} seconds`);
+};
+
+boardPlane(180, 3);
